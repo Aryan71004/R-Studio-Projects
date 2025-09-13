@@ -1,0 +1,191 @@
+---
+title: "Coding Assignment 05"
+output:
+  html_document:
+    df_print: paged
+---
+
+----
+
+### Type your student name and ID
+
+Name and ID: Aryan Bhavsar, Id-702660080
+
+---
+
+## Task 1: Linear Regression
+
+### Task 1.1: Download the MP3_data and set the work directory where you saved the dataset.
+
+```{r}
+# Download the MP3_data
+# Set the work directory where you saved the MP3_data
+```
+
+### Task 1.2: Download and load the required packages.
+
+```{r}
+#Loading in the 2 packages no need to reinstall the packages already installed
+library(readr)
+library(ggplot2)
+```
+
+### Task 1.3: Load, view the MP3_data dataset, and returning the MP3_data dataset structure.
+
+```{r}
+# Read the file ans assign it to a dataset called mp3
+mp3 <- read.csv("Mp3_Data.csv")
+View(mp3) # Viewing the data set 
+str(mp3)  # Loading the structure of the data set 
+```
+
+### Task 1.4: Adding a scatter plot with points and trendline.
+
+```{r}
+# Adding a scatter plot with points and trendline
+# Using geom_pont to make the point color to yellow and the size to be 2 
+ggplot(mp3, aes(Months, No_of_Songs)) + geom_point(color = "yellow", size = 2) + geom_smooth(method = "lm", se = FALSE, color = "red")
+```
+
+### Task 1.5: Build a linear regression model.
+
+```{r}
+# Building alinear regression model 
+# Specifing the depedent (i.e., predicted) variable (y) -> No_of_Songs
+# Specifing the indepedent (i.e., predictor) variable (x) -> Months
+linear_mode<-lm(No_of_Songs ~ Months, data = mp3) 
+summary(linear_mode) #returns the model summary which includes the result we want
+```
+
+### Task 1.6: Print the linear regression model coefficients.
+
+```{r}
+# Returing the linear model coefficients 
+# We can only print the Intercept and slope 
+linear_mode$coefficients 
+```
+
+### Task 1.7: Using the linear regression model to predict the No_of_Songs when the Months are 5.
+
+```{r}
+# We can use the resulting linear model for prediction 
+# Using the predict() function 
+# We can use predict certain value 
+predict(linear_mode, data.frame(Months = 5))
+```
+
+### Task 1.8: Using the linear regression model to predict the No_of_Songs when the Months are a range of Months.
+
+```{r}
+# We can use the resulting linear model for prediction 
+# Using the predict() function 
+# We can use predict certain value 
+# Using the Rangevalues we can predict more than one No_of_Songs
+rangevalues <- data.frame(Months <- c(4, 7, 10, 12))
+predict(linear_mode, rangevalues)
+```
+
+
+
+## Task 2: Logistic Regression
+
+### Task 2.1: Download the Stroke_dataset and set the work directory where you saved the dataset.
+
+```{r}
+# Download the MP3_data
+# Set the work directory where you saved the Stroke_dataset
+```
+
+### Task 2.2: Download and load the required packages.
+
+```{r}
+# Already have readr package downloaded. 
+#install.packages("caTools")
+#calling the readr and the caTools packages
+library(readr)
+library(caTools)
+```
+
+### Task 2.3: Load, view the Stroke_dataset dataset, and returning the Stroke_dataset dataset structure.
+
+```{r}
+# Read the file ans assign it to a dataset called Stroke
+Stroke <- read.csv("Stroke_dataset.csv")
+View(Stroke) # Viewing the data set 
+str(Stroke)  # Loading the structure of the data set 
+```
+
+### Task 2.4: Split the dataset into two datasets: training and testing.
+
+```{r}
+# We used the split ratio of 0.7 for traning and 0.3 for testing 
+# We need to assign the large ratio to the training as we need to train the model in order to make prediction 
+split <- sample.split(Stroke$stroke, SplitRatio = 0.7)
+# This means that 70% of the dataset will be randomly assigned a TRUE value(to trainthe model).The other 30% will be randomly assigned a FALSE value (to test the model) 
+TrainData <- subset(Stroke, split == "TRUE")
+TestData <- subset(Stroke, split == "FALSE")
+# Printing the Train and Test Dats 
+TrainData 
+TestData
+```
+
+### Task 2.5: Build a logistics regression model.
+
+```{r}
+# Generating the logistic regression model 
+# Using the glm() function 
+# family = "binomial" is to tell R that this is a logistic regression model 
+# We use the tilde ~ to specify the indepedent and outcome variables 
+logmodel <- glm(stroke ~ age + hypertension + heart_disease + ever_married + avg_glucose_level + smoking_status, data = TrainData, family= "binomial")
+summary(logmodel) # Printing thesummary of the logstic regression model 
+```
+
+### Task 2.6: Get the probability values for the train and test models but DONOT PRINT THE VALUES .
+
+```{r}
+# We can also predict the values for the test dataset to get the probability results 
+# type = "response", here we are telling R to return the probility results
+prob_test <- predict(logmodel, TestData, type = "response")
+
+
+# We can also predict the values for the test dataset to get the probility results 
+prob_train <- predict(logmodel, data = TrainData, type = "response")
+
+```
+
+### Task 2.7: Generate and print the confusion matrix for the train dataset with a threshold of 0.5
+
+```{r}
+# The first step: we need to get the probility values of the HeatDis variable in the Heat_ds dataset. 
+Probability_values1 <-predict(logmodel, Stroke, type = "response")
+Probability_values1 # Printing the probility values
+
+# We will use the ifelse () function 
+# We will use a cut off (i.e Threshold) value of 50%
+# That is, if the probility value is greater than 50%, then the prediction is 1, otherwise, it is 0
+PredictionClass <- ifelse(Probability_values1 > 0.50, 1, 0)
+PredictionClass # Printing the Predictionclass 
+
+# Weed need to use the as.factor() function for both: PredictionClass and the HeartDis 
+#install.packages("caret")
+library(caret)
+confusionMatrix(as.factor(PredictionClass), as.factor(Stroke$stroke))
+```
+
+### Task 2.8: Validate the logistic regression model by calculating the accuracy, precision, and recall.
+
+```{r}
+# Validating the model 
+# Accuracy is calculated as he total number of two corrrect predictions 
+#(TP + TN) divided by the total number of predictions (TP + TN + FN + FP)
+Accuracy <- c((4861+0)/(4861+249+0+0))
+Accuracy # Printing the Accuracy result 
+
+# Precision is calculated as TP divided by the sum of TP and FP
+Precision <- c(0/(0+0))
+Precision # Printing the Precision result 
+
+# Recall is calculated as TP divided by the sum of TP and FN
+Recall <- c(0/(0+249))
+Recall # Printing the Recall result 
+```
