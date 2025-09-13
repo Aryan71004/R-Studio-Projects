@@ -1,0 +1,190 @@
+---
+title: "Data Visualization"
+date: "`r Sys.Date()`"
+output: html_document
+text.align: justify
+---
+
+----
+
+#### Task 1: Download and load the required packages:
+
+```{r}
+#loading the ggplot2 and readr packages
+library(ggplot2)
+library(readr)
+```
+
+----
+
+#### Task 2: Load, view and return the structure of the mtcars
+
+```{r}
+data(mtcars) #loading the mtcars data set 
+View(mtcars) #Viewing the mtcars data set 
+str(mtcars)  # returning the structure of the mtcars 
+```
+
+----
+
+#### Task 3: Follow the instructions sheet.
+```{r}
+#adding a histogram 
+#using the mtcars dataset 
+#adjusting the width of bins to 4
+#changing the border color to white and the fill color to red and the bins to 4 using the geom_histogram
+#adding x and y axis labels, adding the title and the subtitle
+ggplot(data=mtcars, aes(x=mpg)) + geom_histogram(color="white", fill="red", bins=4) +labs(x="Mile per Gallon (mpg)", y="Count", title=" A Histogram for MPG
+", subtitle=" mtcars dataset") + theme_bw()
+```
+
+----
+
+#### Task 4: Follow the instructions sheet.
+
+```{r}
+#Adding a histrogram with border color blue and the binwidth to 3
+#Using labs to add x and y label's 
+#Using fill=factor(cyl) to change the color of histogram 
+#Using facet_wrap(~cyl) to make 3 seperate graphs
+#Moving the legend position on the top using (legend.position="top")
+ggplot(data=mtcars, aes(x=carb, fill=factor(cyl))) + geom_histogram(color="blue", binwidth=3) + labs(x="Carburetors", y="Frequency") + theme_light() + facet_wrap(~cyl) + theme(legend.position="top")
+ggsave("Facetted histogram.png")
+```
+
+----
+
+#### Task 5: Follow the instructions sheet.
+
+```{r}
+#Adding a geom_bar and changing the width to 0.5
+#Using labs to add x, y, and title label's 
+#Using fill=factor(cyl) to change the color of barplot  
+#Using the legend position to remove the legend 
+#Using the factor() method to convert the cyl variable to factor
+ggplot(data=mtcars, aes(x=factor(cyl), fill=factor(cyl))) + geom_bar(width=0.5) + labs(x="Cylinder", y="Count", title="Bar plot for mtcars cylinders") + theme_bw() + theme(legend.position="remove")
+ggsave("mtcars cylinders.png")
+```
+
+----
+
+#### Task 6: Download the Train_crash dataset and set the workdirectory.
+
+```{r}
+# Download the Train_crash dataset.
+# Set the working directory where you saved the Train_crash dataset.
+```
+
+----
+
+#### Task 7: Load, view and return the structure of the Train_ds dataset.
+
+```{r}
+#Loading the Train_crash.csv ans assigning it to variable called Train_ds.
+Train_ds<-read.csv("Train_crash.csv")
+View(Train_ds) #Viewing the Train_ds dataset
+str(Train_ds)  #Returning the structure of  Train_ds dataset
+```
+
+----
+
+#### Task 8: Add a bar plot showing the Survival Rate.
+
+```{r}
+#Adding X, Y, and title using the labs method 
+#Using the factor() method to convert the Survived variable to factor
+#using fill=factor() too get 2 different bars
+#changing the theme to theme_light()
+#Using geom_bar to change the width to 0.5
+ggplot(data=Train_ds, aes(x=factor(Survived), fill=factor(Survived))) + geom_bar(width=0.5) + labs(x="Survived", y="Passenger Count", title="Train Crash Survival Rate") + theme_light()
+```
+
+----
+
+#### Task 9: Add a bar plot showing the Survival Rate by gender.
+
+```{r}
+#Adding X, Y, and title using the labs method 
+#Using the factor() method to convert the Survived variable to factor
+#using fill=factor() too get multi color bars 
+#changing the theme to theme_bw()
+#Using geom_bar to change the width to 0.5
+ggplot(data=Train_ds, aes(x=factor(Survived), fill=factor(Gender))) + geom_bar(width=0.5) + labs(x="Survived", y="Passenger Count", title="Train Crash Survival Rate by Gender") + theme_bw()
+```
+
+----
+
+#### Task 10: Add a bar plot showing the Ticket Class by Gender
+
+```{r}
+#Adding X, Y, and title using the labs method 
+#Using the factor() method to convert the Tick_Class variable to factor
+#using fill=factor() too get 2 different color bars
+#changing the theme to theme_bw()
+#Using position="dodge" to make the bar side by side 
+#Using geom_bar to change the width to 0.8
+ggplot(data=Train_ds, aes(x=factor(Tick_Class), fill=factor(Gender))) + geom_bar(width=0.8, position="dodge") + labs(x="Ticket Class", y="Passenger Count", title="Ticket Class by Gender") + theme_bw()
+```
+
+
+----
+
+#### Task 11: Add a bar plot showing the Survival Rate by Ticket Class
+
+```{r}
+#Adding X, Y, and title using the labs method 
+#Using the factor() method to convert the Tick_Class variable to factor
+#using fill=factor() too get 2 different color bars
+#changing the theme to theme_light()
+#Using position="dodge" to make the bar side by side 
+#Using geom_bar to change the width to 0.7
+ggplot(data=Train_ds, aes(x=factor(Tick_Class), fill=factor(Survived))) + geom_bar(width=0.7, position="dodge") + labs(x="Ticket Class", y="Passenger Count", title="Train Crash Survival Rates by Ticket Class") + theme_light()
+```
+
+----
+
+#### Task 12: Add a bar plot showing the Ticket Class per the Embarked Port
+
+```{r}
+#Adding X, Y, and title using the labs method 
+#Using the factor() method to convert the Tick_Class variable to factor
+#using fill=factor() too get 3 different color bars
+#changing the theme to theme_light()
+#Using position="dodge" to make the bar side by side 
+#Using geom_bar to change the width to 0.8
+ggplot(data=Train_ds, aes(x=factor(Tick_Class), fill=factor(Port_embark))) + geom_bar(width=0.8, position="dodge") + labs(x="Ticket Class", y="Passenger Count", title=" Ticket Class per the Embarked Port") + theme_light()
+```
+
+----
+
+#### Task 13: Add a bar plot showing the Embarked Port Survival Rate by Ticket Class
+
+```{r}
+#Adding X, Y, and title using the labs method 
+#Using the factor() method to convert the Survived variable to factor
+#using fill=factor() too get 3 different color bars
+#changing the theme to theme_light()
+#Using position="dodge" to make the bar side by side 
+#Using geom_bar to change the width to 0.8
+#Using facet_wrap() to make 3 different graphs 
+ggplot(data=Train_ds, aes(x=factor(Survived), fill=factor(Tick_Class))) + geom_bar(width=0.8, position="dodge") + labs(x="Survived", y="Passenger Count", title="Embarked Port Survival Rate by Ticket Class") + theme_light() + facet_wrap(~Port_embark)
+
+```
+
+----
+
+#### Task 14: Add a bar plot showing the Gender Survival Rate by Ticket Class
+
+```{r}
+#Adding X, Y, and title using the labs method 
+#Using the factor() method to convert the Tick_Class variable to factor
+#using fill=factor() too get 2 different color bars
+#changing the theme to theme_light()
+#Using position="dodge" to make the bar side by side 
+#Using geom_bar to change the width to 0.7
+#Using facet_wrap() to make 2 different graphs 
+ggplot(data=Train_ds, aes(x=factor(Survived), fill=factor(Tick_Class))) + geom_bar(width=0.7, position="dodge") + labs(x="Survived", y="Passenger Count", title="Gender Survival Rate by Ticket Class") + theme_light() + facet_wrap(~Gender)
+ggsave("Gender Survival Rate by Ticket Class.png")
+```
+
+----
